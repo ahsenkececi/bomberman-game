@@ -1,115 +1,115 @@
 package com.bomberman;
 
 import com.bomberman.database.DatabaseManager;
-import com.bomberman.factory.*;
-import com.bomberman.models.*;
-import com.bomberman.observer.GameEventManager;
-import com.bomberman.strategy.*;
+import com.bomberman.decorator.*;
+import com.bomberman.state.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("🎮 BOMBERMAN GAME - DAY 4 TEST");
+        System.out.println("🎮 BOMBERMAN GAME - DAY 5 TEST");
         System.out.println("================================\n");
 
         // Database
         DatabaseManager db = DatabaseManager.getInstance();
         System.out.println();
 
-        // ============ STRATEGY PATTERN TEST ============
-        System.out.println("📋 TEST 1: Strategy Pattern (Enemy AI)");
+        // ============ DECORATOR PATTERN TEST ============
+        System.out.println("📋 TEST 1: Decorator Pattern (Power-ups)");
+        System.out.println("-----------------------------------------");
+
+        // Base player oluştur
+        IPlayer player = new BasePlayer("Hero", 5, 5);
+        System.out.println("Base player: " + player);
+        System.out.println("  Speed: " + player.getSpeed());
+        System.out.println("  Bomb Count: " + player.getBombCount());
+        System.out.println("  Bomb Power: " + player.getBombPower());
+        System.out.println();
+
+        // SpeedBoost ekle
+        System.out.println("Collecting SpeedBoost power-up...");
+        player = new SpeedBoostDecorator(player);
+        System.out.println("After power-up: " + player);
+        System.out.println("  Speed: " + player.getSpeed() + " (increased!)");
+        System.out.println();
+
+        // BombPower ekle
+        System.out.println("Collecting BombPower power-up...");
+        player = new BombPowerDecorator(player);
+        System.out.println("After power-up: " + player);
+        System.out.println("  Bomb Power: " + player.getBombPower() + " (increased!)");
+        System.out.println();
+
+        // BombCount ekle
+        System.out.println("Collecting BombCount power-up...");
+        player = new BombCountDecorator(player);
+        System.out.println("After power-up: " + player);
+        System.out.println("  Bomb Count: " + player.getBombCount() + " (increased!)");
+        System.out.println();
+
+        // Tüm statları göster
+        System.out.println("Final player stats:");
+        System.out.println("  Speed: " + player.getSpeed());
+        System.out.println("  Bomb Count: " + player.getBombCount());
+        System.out.println("  Bomb Power: " + player.getBombPower());
+        System.out.println();
+
+        // Birden fazla aynı decorator
+        System.out.println("Collecting 2 more SpeedBoosts...");
+        player = new SpeedBoostDecorator(player);
+        player = new SpeedBoostDecorator(player);
+        System.out.println("Super fast player: " + player);
+        System.out.println("  Speed: " + player.getSpeed() + " (VERY FAST!)");
+        System.out.println();
+
+        // ============ STATE PATTERN TEST ============
+        System.out.println("📋 TEST 2: State Pattern (Game States)");
         System.out.println("---------------------------------------");
 
-        // Factory ile düşman oluştur (Strategy otomatik atanır)
-        Enemy staticEnemy = EnemyFactory.createEnemy(EnemyType.STATIC, 5, 5);
-        Enemy chasingEnemy = EnemyFactory.createEnemy(EnemyType.CHASING, 10, 10);
-        Enemy intelligentEnemy = EnemyFactory.createEnemy(EnemyType.INTELLIGENT, 15, 15);
+        GameStateManager stateManager = GameStateManager.getInstance();
 
-        System.out.println("Created: " + staticEnemy);
-        System.out.println("Created: " + chasingEnemy);
-        System.out.println("Created: " + intelligentEnemy);
-        System.out.println();
+        // Menu'den Playing'e geç
+        System.out.println("\nStarting game...");
+        stateManager.changeState(new PlayingState());
+        stateManager.update();
+        stateManager.handleInput("MOVE_UP");
+        stateManager.handleInput("PLACE_BOMB");
 
-        // Stratejilerine göre hareket et
-        System.out.println("Testing enemy movements:");
-        staticEnemy.performMove();
-        chasingEnemy.performMove();
-        intelligentEnemy.performMove();
-        System.out.println();
+        // Playing'den Paused'a geç
+        System.out.println("\nPausing game...");
+        stateManager.changeState(new PausedState());
+        stateManager.handleInput("RESUME");
 
-        // Runtime'da strateji değiştir!
-        System.out.println("Changing strategy at runtime:");
-        staticEnemy.setBehavior(new ChasingBehavior());
-        staticEnemy.performMove();
-        System.out.println();
+        // Paused'dan Playing'e geri dön
+        System.out.println("\nResuming game...");
+        stateManager.changeState(new PlayingState());
+        stateManager.update();
 
-        // ============ OBSERVER PATTERN TEST ============
-        System.out.println("📋 TEST 2: Observer Pattern (Game Events)");
-        System.out.println("------------------------------------------");
+        // Playing'den GameOver'a geç
+        System.out.println("\nGame ended...");
+        stateManager.changeState(new GameOverState("Player 1"));
+        stateManager.handleInput("REMATCH");
 
-        GameEventManager eventManager = GameEventManager.getInstance();
-
-        // Player'ları oluştur (Observer)
-        Player player1 = new Player("Player1", 3, 3);
-        Player player2 = new Player("Player2", 8, 8);
-
-        System.out.println("Created: " + player1);
-        System.out.println("Created: " + player2);
-        System.out.println();
-
-        // Observer'ları kaydet
-        System.out.println("Registering observers:");
-        eventManager.attach(player1);
-        eventManager.attach(player2);
-        System.out.println();
-
-        // Bomba oluştur
-        System.out.println("Creating bomb...");
-        Bomb bomb1 = new Bomb(5, 5, 3);
-        System.out.println(bomb1);
-        System.out.println();
-
-        // Bomba patla - tüm observer'lar bildirim alacak!
-        System.out.println("💣 Bomb exploding...");
-        bomb1.explode();
-        System.out.println();
-
-        // İkinci bomba - farklı pozisyon
-        System.out.println("Creating second bomb...");
-        Bomb bomb2 = new Bomb(8, 8, 2);
-        System.out.println(bomb2);
-        System.out.println();
-
-        System.out.println("💣 Second bomb exploding...");
-        bomb2.explode();
-        System.out.println();
-
-        // Observer çıkar
-        System.out.println("Removing Player1 from observers:");
-        eventManager.detach(player1);
-        System.out.println();
-
-        // Üçüncü bomba - sadece Player2 bildirim alacak
-        System.out.println("Creating third bomb...");
-        Bomb bomb3 = new Bomb(10, 10, 2);
-        System.out.println("💣 Third bomb exploding...");
-        bomb3.explode();
-        System.out.println();
+        // GameOver'dan Menu'ye dön
+        System.out.println("\nReturning to menu...");
+        stateManager.changeState(new MenuState());
 
         // Database kapat
+        System.out.println();
         db.closeConnection();
 
-        System.out.println("================================");
-        System.out.println("✅ Day 4 Complete! 🎉\n");
+        System.out.println("\n================================");
+        System.out.println("✅ Day 5 Complete! 🎉\n");
 
         System.out.println("📊 PATTERN PROGRESS:");
-        System.out.println("✅ Singleton Pattern (DatabaseManager)");
+        System.out.println("✅ Singleton Pattern (DatabaseManager, GameStateManager)");
         System.out.println("✅ Repository Pattern (UserRepository)");
         System.out.println("✅ Factory Pattern (Wall, PowerUp, Enemy)");
         System.out.println("✅ Strategy Pattern (Enemy AI Behaviors)");
         System.out.println("✅ Observer Pattern (Game Events)");
-        System.out.println("⬜ Decorator Pattern");
-        System.out.println("⬜ State Pattern");
+        System.out.println("✅ Decorator Pattern (Player Power-ups)");
+        System.out.println("✅ State Pattern (Game State Machine)");
         System.out.println("⬜ MVC Architecture");
-        System.out.println("\n🎯 5/8 Patterns Complete! (62.5%)");
+        System.out.println("\n🎯 7/8 Patterns Complete! (87.5%)");
+        System.out.println("🔥 Almost there! Just MVC Architecture left!");
     }
 }
