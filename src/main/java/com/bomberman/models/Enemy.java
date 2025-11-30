@@ -1,27 +1,41 @@
 package com.bomberman.models;
 
+import com.bomberman.strategy.IEnemyBehavior;
+
 public class Enemy {
     private int x;
     private int y;
-    private String behaviorType;
+    private IEnemyBehavior behavior;  // Strategy Pattern!
     private boolean isAlive;
 
-    public Enemy(int x, int y, String behaviorType) {
+    public Enemy(int x, int y, IEnemyBehavior behavior) {
         this.x = x;
         this.y = y;
-        this.behaviorType = behaviorType;
+        this.behavior = behavior;
         this.isAlive = true;
+    }
+
+    // Strategy Pattern - Davranışı değiştir
+    public void setBehavior(IEnemyBehavior behavior) {
+        this.behavior = behavior;
+        System.out.println("Enemy behavior changed to: " + behavior.getBehaviorName());
+    }
+
+    // Strategy Pattern - Davranışa göre hareket et
+    public void performMove() {
+        if (behavior != null && isAlive) {
+            behavior.move(this);
+        }
     }
 
     public void move(int newX, int newY) {
         this.x = newX;
         this.y = newY;
-        System.out.println(behaviorType + " enemy moved to (" + x + "," + y + ")");
     }
 
     public void die() {
         isAlive = false;
-        System.out.println(behaviorType + " enemy died!");
+        System.out.println(behavior.getBehaviorName() + " enemy died at (" + x + "," + y + ")");
     }
 
     // Getters
@@ -33,8 +47,8 @@ public class Enemy {
         return y;
     }
 
-    public String getBehaviorType() {
-        return behaviorType;
+    public IEnemyBehavior getBehavior() {
+        return behavior;
     }
 
     public boolean isAlive() {
@@ -43,6 +57,6 @@ public class Enemy {
 
     @Override
     public String toString() {
-        return behaviorType + " Enemy at (" + x + "," + y + ") [" + (isAlive ? "Alive" : "Dead") + "]";
+        return behavior.getBehaviorName() + " Enemy at (" + x + "," + y + ") [" + (isAlive ? "Alive" : "Dead") + "]";
     }
 }
