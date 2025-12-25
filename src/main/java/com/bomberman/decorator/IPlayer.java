@@ -11,4 +11,6 @@ public interface IPlayer {
 
     void move(int newX, int newY);
     void takeDamage();
+
+    boolean isAlive();
 }

@@ -53,6 +53,11 @@ public abstract class PlayerDecorator implements IPlayer {
     }
 
     @Override
+    public boolean isAlive(){
+        return decoratedPlayer.isAlive();
+    }
+
+    @Override
     public String toString() {
         return decoratedPlayer.toString();
     }

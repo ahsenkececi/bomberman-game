@@ -8,6 +8,7 @@ public class BasePlayer implements IPlayer {
     private float speed;
     private int bombCount;
     private int bombPower;
+    private boolean isAlive;
 
     public BasePlayer(String name, int x, int y) {
         this.name = name;
@@ -17,6 +18,7 @@ public class BasePlayer implements IPlayer {
         this.speed = 1.0f;
         this.bombCount = 1;
         this.bombPower = 1;
+        this.isAlive = true;
     }
 
     @Override
@@ -63,6 +65,13 @@ public class BasePlayer implements IPlayer {
     @Override
     public void takeDamage() {
         health--;
+        if (health<=0){
+            isAlive = false;
+        }
+    }
+    @Override
+    public boolean isAlive() {
+        return isAlive;
     }
 
     @Override

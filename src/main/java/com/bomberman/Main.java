@@ -1,115 +1,68 @@
 package com.bomberman;
 
-import com.bomberman.database.DatabaseManager;
-import com.bomberman.decorator.*;
-import com.bomberman.state.*;
+import com.bomberman.views.MainWindow;
+import javax.swing.SwingUtilities;
+
+import com.bomberman.controllers.GameController;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("🎮 BOMBERMAN GAME - DAY 5 TEST");
-        System.out.println("================================\n");
+        // Swing GUI'yi başlat
+        SwingUtilities.invokeLater(() -> {
+            MainWindow window = new MainWindow();
+            window.setVisible(true);
+        });
+        Scanner scanner = new Scanner(System.in);
 
-        // Database
-        DatabaseManager db = DatabaseManager.getInstance();
-        System.out.println();
+        System.out.println("╔═══════════════════════════════════════╗");
+        System.out.println("║                                       ║");
+        System.out.println("║        💣 BOMBERMAN GAME 💣          ║");
+        System.out.println("║                                       ║");
+        System.out.println("╚═══════════════════════════════════════╝\n");
 
-        // ============ DECORATOR PATTERN TEST ============
-        System.out.println("📋 TEST 1: Decorator Pattern (Power-ups)");
-        System.out.println("-----------------------------------------");
+        System.out.println("Select Mode:");
+        System.out.println("1. Local Multiplayer (Hot-Seat)");
+        System.out.println("2. Online Multiplayer (Host)");
+        System.out.println("3. Online Multiplayer (Join)");
+        System.out.print("\nYour choice: ");
 
-        // Base player oluştur
-        IPlayer player = new BasePlayer("Hero", 5, 5);
-        System.out.println("Base player: " + player);
-        System.out.println("  Speed: " + player.getSpeed());
-        System.out.println("  Bomb Count: " + player.getBombCount());
-        System.out.println("  Bomb Power: " + player.getBombPower());
-        System.out.println();
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
 
-        // SpeedBoost ekle
-        System.out.println("Collecting SpeedBoost power-up...");
-        player = new SpeedBoostDecorator(player);
-        System.out.println("After power-up: " + player);
-        System.out.println("  Speed: " + player.getSpeed() + " (increased!)");
-        System.out.println();
+        GameController controller = new GameController();
 
-        // BombPower ekle
-        System.out.println("Collecting BombPower power-up...");
-        player = new BombPowerDecorator(player);
-        System.out.println("After power-up: " + player);
-        System.out.println("  Bomb Power: " + player.getBombPower() + " (increased!)");
-        System.out.println();
+        switch (choice) {
+            case 1:
+                System.out.println("\n🎮 Starting LOCAL game...\n");
+                controller.run();
+                break;
 
-        // BombCount ekle
-        System.out.println("Collecting BombCount power-up...");
-        player = new BombCountDecorator(player);
-        System.out.println("After power-up: " + player);
-        System.out.println("  Bomb Count: " + player.getBombCount() + " (increased!)");
-        System.out.println();
+            case 2:
+                System.out.println("\n🌐 Starting as HOST...\n");
+                controller.startAsHost();
 
-        // Tüm statları göster
-        System.out.println("Final player stats:");
-        System.out.println("  Speed: " + player.getSpeed());
-        System.out.println("  Bomb Count: " + player.getBombCount());
-        System.out.println("  Bomb Power: " + player.getBombPower());
-        System.out.println();
+                // Diğer oyuncu bağlanana kadar bekle
+                System.out.println("⏳ Waiting for other player...");
+                System.out.println("Tell them to connect to your IP!");
 
-        // Birden fazla aynı decorator
-        System.out.println("Collecting 2 more SpeedBoosts...");
-        player = new SpeedBoostDecorator(player);
-        player = new SpeedBoostDecorator(player);
-        System.out.println("Super fast player: " + player);
-        System.out.println("  Speed: " + player.getSpeed() + " (VERY FAST!)");
-        System.out.println();
+                // Game start mesajı gelince otomatik başlayacak
+                break;
 
-        // ============ STATE PATTERN TEST ============
-        System.out.println("📋 TEST 2: State Pattern (Game States)");
-        System.out.println("---------------------------------------");
+            case 3:
+                System.out.print("\n🌐 Enter server IP (or 'localhost'): ");
+                String serverIp = scanner.nextLine();
 
-        GameStateManager stateManager = GameStateManager.getInstance();
+                System.out.println("Connecting to " + serverIp + "...\n");
+                controller.startAsClient(serverIp);
+                break;
 
-        // Menu'den Playing'e geç
-        System.out.println("\nStarting game...");
-        stateManager.changeState(new PlayingState());
-        stateManager.update();
-        stateManager.handleInput("MOVE_UP");
-        stateManager.handleInput("PLACE_BOMB");
+            default:
+                System.out.println("Invalid choice!");
+                return;
+        }
 
-        // Playing'den Paused'a geç
-        System.out.println("\nPausing game...");
-        stateManager.changeState(new PausedState());
-        stateManager.handleInput("RESUME");
-
-        // Paused'dan Playing'e geri dön
-        System.out.println("\nResuming game...");
-        stateManager.changeState(new PlayingState());
-        stateManager.update();
-
-        // Playing'den GameOver'a geç
-        System.out.println("\nGame ended...");
-        stateManager.changeState(new GameOverState("Player 1"));
-        stateManager.handleInput("REMATCH");
-
-        // GameOver'dan Menu'ye dön
-        System.out.println("\nReturning to menu...");
-        stateManager.changeState(new MenuState());
-
-        // Database kapat
-        System.out.println();
-        db.closeConnection();
-
-        System.out.println("\n================================");
-        System.out.println("✅ Day 5 Complete! 🎉\n");
-
-        System.out.println("📊 PATTERN PROGRESS:");
-        System.out.println("✅ Singleton Pattern (DatabaseManager, GameStateManager)");
-        System.out.println("✅ Repository Pattern (UserRepository)");
-        System.out.println("✅ Factory Pattern (Wall, PowerUp, Enemy)");
-        System.out.println("✅ Strategy Pattern (Enemy AI Behaviors)");
-        System.out.println("✅ Observer Pattern (Game Events)");
-        System.out.println("✅ Decorator Pattern (Player Power-ups)");
-        System.out.println("✅ State Pattern (Game State Machine)");
-        System.out.println("⬜ MVC Architecture");
-        System.out.println("\n🎯 7/8 Patterns Complete! (87.5%)");
-        System.out.println("🔥 Almost there! Just MVC Architecture left!");
+        scanner.close();
     }
 }

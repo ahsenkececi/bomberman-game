@@ -75,6 +75,8 @@ public class UserRepository implements IRepository<User> {
         return user;
     }
 
+
+
     @Override
     public void add(User user) {
         String query = "INSERT INTO users (username, password_hash) VALUES (?, ?)";
@@ -172,4 +174,27 @@ public class UserRepository implements IRepository<User> {
 
         return user;
     }
+
+    public void updateTheme(int userId, String theme) {
+        String query = "UPDATE users SET preferred_theme = ? WHERE id = ?";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, theme);
+            pstmt.setInt(2, userId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("✅ Theme updated for user " + userId);
+            }
+
+            pstmt.close();
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error updating theme!");
+            e.printStackTrace();
+        }
+    }
+
 }

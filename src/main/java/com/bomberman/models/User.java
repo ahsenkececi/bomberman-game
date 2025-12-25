@@ -7,13 +7,15 @@ public class User {
     private String username;
     private String passwordHash;
     private LocalDateTime createdAt;
+    private String preferredTheme;
 
     // Constructor (tüm parametreli)
-    public User(int id, String username, String passwordHash, LocalDateTime createdAt) {
+    public User(int id, String username, String passwordHash, LocalDateTime createdAt, String preferredTheme) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
         this.createdAt = createdAt;
+        this.preferredTheme = preferredTheme;
     }
 
     // Constructor (ID olmadan - yeni kullanıcı için)
@@ -43,6 +45,10 @@ public class User {
         return createdAt;
     }
 
+    public String getPreferredTheme() {
+        return preferredTheme;
+    }
+
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -58,6 +64,10 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setPreferredTheme(String preferredTheme) {
+        this.preferredTheme = preferredTheme;
     }
 
     // toString (debug için)
