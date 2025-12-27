@@ -2,19 +2,18 @@ package com.bomberman.controllers;
 
 import com.bomberman.models.*;
 import com.bomberman.repository.*;
-import com.bomberman.views.MainWindow;  // ✅ MainWindow kullan
+import com.bomberman.views.MainWindow;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
-
 
 public class MenuController {
 
     private UserRepository userRepository;
     private GameStatsRepository statsRepository;
-    private MainWindow mainWindow;  // ✅ MainWindow
+    private MainWindow mainWindow;
 
-    public MenuController(MainWindow mainWindow) {  // ✅ MainWindow
+    public MenuController(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         this.userRepository = new UserRepository();
         this.statsRepository = new GameStatsRepository();
@@ -75,15 +74,91 @@ public class MenuController {
         return false;
     }
 
-    // Oyun başlatma - GameWindow'u aç
+    // ✅ Local Multiplayer - GameController ile oyunu başlatır
     public void startGame(Theme theme, boolean multiplayer) {
         User user = GameManager.getInstance().getLoggedInUser();
 
         if (user != null) {
             GameManager.getInstance().startNewGame(user, theme, multiplayer);
-            mainWindow.startGame();  // ✅ MainWindow üzerinden GameWindow'u aç
+
+            // MainWindow'u gizle
+            mainWindow.setVisible(false);
+
+            // ✅ YENİ: Separate thread'de oyunu başlat
+            new Thread(() -> {
+                GameController controller = new GameController();
+                controller.run();
+
+                // Oyun bitince MainWindow'u tekrar göster
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    mainWindow.setVisible(true);
+                });
+            }).start();
+
         } else {
-            System.out.println("❌ No user logged in!");
+            JOptionPane.showMessageDialog(null, "❌ Please login first!");
+        }
+    }
+
+    // ✅ Online Host olarak başlat
+    public void startGameAsHost(Theme theme) {
+        User user = GameManager.getInstance().getLoggedInUser();
+
+        if (user != null) {
+            GameManager.getInstance().startNewGame(user, theme, true);
+
+            // MainWindow'u gizle
+            mainWindow.setVisible(false);
+
+            // ✅ YENİ: Separate thread'de host olarak başlat
+            new Thread(() -> {
+                GameController controller = new GameController();
+                controller.startAsHost(); // Online host başlat
+
+                // Oyun bitince MainWindow'u tekrar göster
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    mainWindow.setVisible(true);
+                });
+            }).start();
+
+            // Bilgilendirme
+            JOptionPane.showMessageDialog(
+                    null,
+                    "🌐 Server Starting!\n\n" +
+                            "Waiting for other player to connect...\n" +
+                            "Your IP: Check console output",
+                    "Host Mode",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } else {
+            JOptionPane.showMessageDialog(null, "❌ Please login first!");
+        }
+    }
+
+    // ✅ Online Client olarak başlat
+    public void startGameAsClient(Theme theme, String serverIp) {
+        User user = GameManager.getInstance().getLoggedInUser();
+
+        if (user != null) {
+            GameManager.getInstance().startNewGame(user, theme, true);
+
+            // MainWindow'u gizle
+            mainWindow.setVisible(false);
+
+            // ✅ YENİ: Separate thread'de client olarak başlat
+            new Thread(() -> {
+                GameController controller = new GameController();
+                controller.startAsClient(serverIp); // Online client başlat
+
+                // Oyun bitince MainWindow'u tekrar göster
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    mainWindow.setVisible(true);
+                });
+            }).start();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "❌ Please login first!");
         }
     }
 
@@ -117,35 +192,6 @@ public class MenuController {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return password; // Fallback
-        }
-    }
-    // ✅ YENİ: Online Host olarak başlat
-    public void startGameAsHost(Theme theme) {
-        User user = GameManager.getInstance().getLoggedInUser();
-
-        if (user != null) {
-            GameManager.getInstance().startNewGame(user, theme, true);
-
-            // GameController oluştur ve online host başlat
-            GameController gameController = new GameController();
-            gameController.startAsHost();
-        } else {
-            JOptionPane.showMessageDialog(null, "Please login first!");
-        }
-    }
-
-    // ✅ YENİ: Online Client olarak başlat
-    public void startGameAsClient(Theme theme, String serverIp) {
-        User user = GameManager.getInstance().getLoggedInUser();
-
-        if (user != null) {
-            GameManager.getInstance().startNewGame(user, theme, true);
-
-            // GameController oluştur ve online client başlat
-            GameController gameController = new GameController();
-            gameController.startAsClient(serverIp);
-        } else {
-            JOptionPane.showMessageDialog(null, "Please login first!");
         }
     }
 }

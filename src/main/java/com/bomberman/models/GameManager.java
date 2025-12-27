@@ -6,7 +6,7 @@ import com.bomberman.repository.LeaderboardRepository;
 public class GameManager {
 
     // Singleton instance
-    private static GameManager instance;
+    private static GameManager instance; //SINGLETON INSTANCE
 
     // Oyun verileri
     private Game currentGame;
@@ -15,7 +15,7 @@ public class GameManager {
     private boolean isMultiplayer;
     private int currentScore;
 
-    // Private constructor
+    // Private constructor SINGLETON
     private GameManager() {
         this.selectedTheme = Theme.FOREST; // Default tema
         this.isMultiplayer = false;

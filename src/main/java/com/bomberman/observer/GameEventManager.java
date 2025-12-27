@@ -38,7 +38,7 @@ public class GameEventManager implements ISubject {
     public void notifyObservers(String eventType, Object data) {
         System.out.println("📢 Event: " + eventType + " - Notifying " + observers.size() + " observers...");
         for (IObserver observer : observers) {
-            observer.onNotify(eventType, data);
+            observer.onNotify(eventType, data); //TUM OBSERBER'LARA BİLDİR
         }
     }
 }

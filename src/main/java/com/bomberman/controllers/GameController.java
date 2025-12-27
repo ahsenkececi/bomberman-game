@@ -133,6 +133,13 @@ public class GameController {
         System.out.println("\n🎮 Initializing game...\n");
         System.out.println("Mode: " + (isOnlineMode ? "ONLINE" : "LOCAL"));
 
+        // ✅ YENİ: Seçilen temayı uygula
+        Theme selectedTheme = GameManager.getInstance().getSelectedTheme();
+        if (selectedTheme != null) {
+            ThemeManager.getInstance().setTheme(selectedTheme);
+            System.out.println("🎨 Theme set to: " + selectedTheme);
+        }
+
         // Harita oluştur (15x13)
         gameMap = new Map(15, 13);
 
@@ -167,7 +174,7 @@ public class GameController {
 
         System.out.println("✅ Map created (15x13)");
 
-        // ✅ YENİ: Düşmanları ekle
+        // Düşmanları ekle
         Enemy staticEnemy = EnemyFactory.createEnemy(EnemyType.STATIC, 7, 6);
         staticEnemy.setMoveDelay(999f);
 
@@ -190,6 +197,8 @@ public class GameController {
         gameModel.addPowerUp(PowerUpFactory.createPowerUp(PowerUpType.SPEED_BOOST, 3, 5));
         gameModel.addPowerUp(PowerUpFactory.createPowerUp(PowerUpType.BOMB_POWER, 11, 7));
         gameModel.addPowerUp(PowerUpFactory.createPowerUp(PowerUpType.BOMB_COUNT, 7, 9));
+        gameModel.addPowerUp(PowerUpFactory.createPowerUp(PowerUpType.SHIELD, 5, 3));
+        gameModel.addPowerUp(PowerUpFactory.createPowerUp(PowerUpType.GHOST, 9, 5));
         System.out.println("✅ Power-ups spawned on map");
 
         // Oyuncular oluştur

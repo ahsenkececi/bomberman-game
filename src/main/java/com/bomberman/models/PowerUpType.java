@@ -5,6 +5,5 @@ public enum PowerUpType {
     BOMB_POWER,
     BOMB_COUNT,
     SHIELD,
-    GHOST,
-    MAXSPEED
+    GHOST
 }

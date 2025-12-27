@@ -20,6 +20,12 @@ public class PowerUpFactory {
             case BOMB_COUNT:
                 return new BombCountPowerUp(x, y);
 
+            case SHIELD:  // ✅ YENİ!
+                return new ShieldPowerUp(x, y);
+
+            case GHOST:  // ✅ YENİ!
+                return new GhostPowerUp(x, y);
+
             default:
                 throw new IllegalArgumentException("Invalid power-up type: " + type);
         }

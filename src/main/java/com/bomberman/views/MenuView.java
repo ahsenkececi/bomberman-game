@@ -52,7 +52,7 @@ public class MenuView extends JPanel {
 
         // Title
         JLabel titleLabel = new JLabel("💣 BOMBERMAN GAME 💣");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        titleLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 32));
         titleLabel.setForeground(new Color(238, 238, 238));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -185,7 +185,7 @@ public class MenuView extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         startGameButton = new JButton("🎮 Start Game");
-        startGameButton.setFont(new Font("Arial", Font.BOLD, 18));
+        startGameButton.setFont(new Font("Segoe UI Emoji", Font.BOLD, 18));
         startGameButton.setBackground(new Color(0, 173, 181));
         startGameButton.setForeground(Color.WHITE);
         startGameButton.setFocusPainted(false);
@@ -193,8 +193,7 @@ public class MenuView extends JPanel {
         startGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Theme selected = (Theme) themeComboBox.getSelectedItem();
-                controller.startGame(selected, false); // Single player
+                showGameModeDialog();
             }
         });
         panel.add(startGameButton, gbc);
@@ -202,7 +201,7 @@ public class MenuView extends JPanel {
         // Leaderboard button
         gbc.gridy = 3;
         leaderboardButton = new JButton("🏆 Leaderboard");
-        leaderboardButton.setFont(new Font("Arial", Font.BOLD, 18));
+        leaderboardButton.setFont(new Font("Segoe UI Emoji", Font.BOLD, 18));
         leaderboardButton.setBackground(new Color(253, 203, 110));
         leaderboardButton.setForeground(new Color(34, 40, 49));
         leaderboardButton.setFocusPainted(false);
@@ -303,5 +302,45 @@ public class MenuView extends JPanel {
         usernameField.setText("");
         passwordField.setText("");
         messageLabel.setText(" ");
+    }
+    // ✅ YENİ: Oyun modu seçim dialogu
+    private void showGameModeDialog() {
+        String[] options = {"🕹️ Local Multiplayer", "🌐 Online (Host)", "🔗 Online (Join)"};
+
+        int choice = JOptionPane.showOptionDialog(
+                this,
+                "Select Game Mode:",
+                "🎮 Game Mode Selection",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        Theme selectedTheme = (Theme) themeComboBox.getSelectedItem();
+
+        switch (choice) {
+            case 0: // Local Multiplayer
+                controller.startGame(selectedTheme, false);
+                break;
+
+            case 1: // Online Host
+                controller.startGameAsHost(selectedTheme);
+                break;
+
+            case 2: // Online Join
+                String serverIp = JOptionPane.showInputDialog(
+                        this,
+                        "Enter Server IP Address:",
+                        "Connect to Server",
+                        JOptionPane.PLAIN_MESSAGE
+                );
+
+                if (serverIp != null && !serverIp.trim().isEmpty()) {
+                    controller.startGameAsClient(selectedTheme, serverIp);
+                }
+                break;
+        }
     }
 }
