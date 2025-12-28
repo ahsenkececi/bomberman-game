@@ -10,7 +10,7 @@ public class Player implements IObserver, IPlayer {
     private int health;
     private boolean isAlive;
 
-    // ✅ Sadece BASE değerler
+    // Sadece BASE değerler
     private float speed;
     private int bombCount;
     private int bombPower;
@@ -30,11 +30,7 @@ public class Player implements IObserver, IPlayer {
         this.currentBombs = 0;
     }
 
-    // ❌ KALDIRILDI: Tüm temp değişkenler
-    // ❌ KALDIRILDI: addSpeedBoost(), addBombPower(), addBombCount()
-    // ❌ KALDIRILDI: updateTimers()
-
-    // Hareket metodları aynen kalır
+    // Hareket metodları
     public boolean move(int dx, int dy, Map map) {
         int newX = x + dx;
         int newY = y + dy;
@@ -113,7 +109,7 @@ public class Player implements IObserver, IPlayer {
         System.out.println("  ☠️  " + name + " died!");
     }
 
-    // ✅ IPlayer interface metodları
+    // IPlayer interface metodları
     @Override
     public String getName() {
         return name;
@@ -157,7 +153,7 @@ public class Player implements IObserver, IPlayer {
         return currentBombs;
     }
 
-    // ✅ IPlayer'dan gelen move
+    //IPlayer'dan gelen move
     @Override
     public void move(int newX, int newY) {
         this.x = newX;
@@ -169,17 +165,17 @@ public class Player implements IObserver, IPlayer {
         return name + " at (" + x + "," + y + ") [HP:" + health + " Speed:" + speed +
                 " Bombs:" + currentBombs + "/" + bombCount + " Power:" + bombPower + "]";
     }
-    // ✅ GameWindow için placeholder metodlar (her zaman false)
+    // GameWindow için placeholder metodlar
     public boolean isShieldActive() {
-        return false;  // Artık shield yok
+        return true;
     }
 
     public boolean isGhostMode() {
-        return false;  // Artık ghost yok
+        return true;
     }
 
     public boolean isMaxSpeedActive() {
-        return false;  // Artık max speed yok
+        return false;
     }
 
     public float getShieldTimer() {

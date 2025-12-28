@@ -20,7 +20,7 @@ public class ChasingBehavior implements IEnemyBehavior {
         int newX = enemyX;
         int newY = enemyY;
 
-        // Hangi eksende daha uzak? Ona göre hareket et
+        // Hangi eksende daha uzak Ona göre hareket et
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             // X ekseninde hareket et
             if (deltaX > 0) {

@@ -39,7 +39,6 @@ public class Bomb {
         }
     }
 
-    // Getters
     public int getX() {
         return x;
     }

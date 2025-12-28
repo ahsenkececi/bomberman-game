@@ -15,8 +15,8 @@ public class DatabaseManager {
 
     // MySQL bağlantı bilgileri
     private static final String URL = "jdbc:mysql://localhost:3306/bomberman_db";
-    private static final String USER = "root";  // Senin MySQL kullanıcı adın
-    private static final String PASSWORD = "10102004Er";  // Senin MySQL şifren
+    private static final String USER = "root";  //  MySQL kullanıcı adı
+    private static final String PASSWORD = "10102004Er";  //  MySQL şifre
 
     // Private constructor (dışarıdan new yapılamasın)
     private DatabaseManager() {

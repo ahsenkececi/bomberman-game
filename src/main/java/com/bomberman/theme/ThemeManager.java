@@ -28,7 +28,7 @@ public class ThemeManager {
         return currentTheme;
     }
 
-    // Zemin renkleri (çim/kum/asfalt)
+    // Zemin renkleri
     public Color getGroundColor1() {
         switch (currentTheme) {
             case DESERT:

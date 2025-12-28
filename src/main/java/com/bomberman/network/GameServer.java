@@ -40,7 +40,7 @@ public class GameServer {
                 if (clients.size() == 2) {
                     System.out.println("🎮 Both players connected! Starting game...");
 
-                    // ✅ Tüm client'lara GAME_START gönder
+                    // Tüm client'lara GAME_START gönder
                     NetworkMessage startMsg = new NetworkMessage(
                             NetworkMessage.MessageType.GAME_START,
                             "Game Starting!"

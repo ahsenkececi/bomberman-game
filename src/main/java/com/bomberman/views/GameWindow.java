@@ -166,7 +166,7 @@ public class GameWindow extends JFrame {
                 }
             }
 
-// 🏜️ DESERT - Kumsal zemin
+// DESERT - Kumsal zemin
             private void drawDesertGround(Graphics2D g2d, int x, int y, int gridX, int gridY) {
                 // Ana kum rengi
                 if ((gridX + gridY) % 2 == 0) {
@@ -185,7 +185,7 @@ public class GameWindow extends JFrame {
                 }
             }
 
-// 🌲 FOREST - Çimen zemin
+// FOREST - Çimen zemin
             private void drawForestGround(Graphics2D g2d, int x, int y, int gridX, int gridY) {
                 // Çim rengi
                 if ((gridX + gridY) % 2 == 0) {
@@ -204,7 +204,7 @@ public class GameWindow extends JFrame {
                 }
             }
 
-// 🏙️ CITY - Asfalt zemin
+// CITY - Asfalt zemin
             private void drawCityGround(Graphics2D g2d, int x, int y, int gridX, int gridY) {
                 // Asfalt rengi
                 if ((gridX + gridY) % 2 == 0) {

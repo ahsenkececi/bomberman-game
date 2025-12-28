@@ -7,9 +7,9 @@ public class GhostPowerUp extends PowerUp {
     }
 
     @Override
-    public void applyEffect() {  // ✅ Parametre YOK
+    public void applyEffect() {
         System.out.println("👻 Ghost mode activated!");
-        // TODO: Ghost mekanizması
+
     }
 
     @Override

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private Theme theme;  // ✅ Zaten var
+    private Theme theme;
     private List<Player> players;
     private List<Enemy> enemies;
     private List<Bomb> bombs;
@@ -12,9 +12,9 @@ public class Game {
     private List<PowerUp> powerUps;
     private boolean isRunning;
     private int turnCount;
-    private int score;  // ✅ Skor ekleyin
+    private int score;
 
-    // ✅ YENİ: Theme parametreli constructor
+    // Theme parametreli constructor
     public Game(Theme theme) {
         this.theme = theme;
         this.players = new ArrayList<>();
@@ -29,7 +29,7 @@ public class Game {
         System.out.println("🎮 Game created with theme: " + theme);
     }
 
-    // ✅ ESKİ: Parametresiz constructor (eski kodlar için)
+    // Parametresiz constructor (eski kodlar için)
     public Game() {
         this(Theme.FOREST);  // Default tema
     }
@@ -68,7 +68,7 @@ public class Game {
         turnCount++;
     }
 
-    // ✅ YENİ: Skor metodları
+    // Skor metodları
     public void addScore(int points) {
         this.score += points;
     }

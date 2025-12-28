@@ -74,7 +74,7 @@ public class MenuController {
         return false;
     }
 
-    // ✅ Local Multiplayer - GameController ile oyunu başlatır
+    // Local Multiplayer - GameController ile oyunu başlatır
     public void startGame(Theme theme, boolean multiplayer) {
         User user = GameManager.getInstance().getLoggedInUser();
 
@@ -84,7 +84,7 @@ public class MenuController {
             // MainWindow'u gizle
             mainWindow.setVisible(false);
 
-            // ✅ YENİ: Separate thread'de oyunu başlat
+            // Separate thread'de oyunu başlat
             new Thread(() -> {
                 GameController controller = new GameController();
                 controller.run();
@@ -100,7 +100,7 @@ public class MenuController {
         }
     }
 
-    // ✅ Online Host olarak başlat
+    // Online Host olarak başlat
     public void startGameAsHost(Theme theme) {
         User user = GameManager.getInstance().getLoggedInUser();
 
@@ -110,7 +110,7 @@ public class MenuController {
             // MainWindow'u gizle
             mainWindow.setVisible(false);
 
-            // ✅ YENİ: Separate thread'de host olarak başlat
+            //Separate thread'de host olarak başlat
             new Thread(() -> {
                 GameController controller = new GameController();
                 controller.startAsHost(); // Online host başlat
@@ -136,7 +136,7 @@ public class MenuController {
         }
     }
 
-    // ✅ Online Client olarak başlat
+    //Online Client olarak başlat
     public void startGameAsClient(Theme theme, String serverIp) {
         User user = GameManager.getInstance().getLoggedInUser();
 
@@ -146,7 +146,7 @@ public class MenuController {
             // MainWindow'u gizle
             mainWindow.setVisible(false);
 
-            // ✅ YENİ: Separate thread'de client olarak başlat
+            // Separate thread'de client olarak başlat
             new Thread(() -> {
                 GameController controller = new GameController();
                 controller.startAsClient(serverIp); // Online client başlat
@@ -179,7 +179,7 @@ public class MenuController {
         System.out.println("✅ User logged out");
     }
 
-    // Şifre hashleme (MD5)
+    // Şifre hashleme
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

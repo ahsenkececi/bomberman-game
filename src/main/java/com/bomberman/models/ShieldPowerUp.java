@@ -3,13 +3,12 @@ package com.bomberman.models;
 public class ShieldPowerUp extends PowerUp {
 
     public ShieldPowerUp(int x, int y) {
-        super(x, y);  // ✅ Doğru
+        super(x, y);
     }
 
     @Override
-    public void applyEffect() {  // ✅ Parametre YOK
+    public void applyEffect() {
         System.out.println("🛡️ Shield power-up collected!");
-        // TODO: Shield mekanizması
     }
 
     @Override

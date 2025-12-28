@@ -15,25 +15,25 @@ import java.util.List;
 
 public class GameController {
 
-    // MVC Components
+    // MVC Componentler
     private Game gameModel;
     private GameView gameView;
     private GameStateManager stateManager;
     private InputController inputController;
     private GameWindow gameWindow;
 
-    // ✅ YENİ: Network controller
+    // Network controller
     private NetworkController networkController;
     private boolean isOnlineMode;
 
     // Game objects
     private Map gameMap;
 
-    // ✅ IPlayer kullan (Decorator için)
+    // IPlayer kullan (Decorator için)
     private IPlayer player1;
     private IPlayer player2;
 
-    // ✅ Gerçek Player referansları (Observer, isAlive, moveUp için)
+    // Gerçek Player referansları (Observer, isAlive, moveUp için)
     private Player realPlayer1;
     private Player realPlayer2;
 
@@ -67,7 +67,7 @@ public class GameController {
         dbManager = DatabaseManager.getInstance();
         eventManager = GameEventManager.getInstance();
 
-        // ✅ YENİ: Network
+        // Network
         networkController = new NetworkController(this);
         isOnlineMode = false;
 
@@ -77,7 +77,7 @@ public class GameController {
         notifications = new ArrayList<>();
     }
 
-    // ✅ YENİ: Online modda başlat (Host)
+    // Online modda başlat (Host)
     public void startAsHost() {
         System.out.println("🌐 Starting as HOST...");
         isOnlineMode = true;
@@ -88,7 +88,7 @@ public class GameController {
         // Diğer oyuncu bağlanana kadar bekle
         System.out.println("⏳ Waiting for other player to connect...");
 
-        // ✅ GEÇİCİ: 5 saniye bekle sonra başlat
+        //5 saniye bekle sonra başlat
         new Thread(() -> {
             try {
                 Thread.sleep(5000);  // 5 saniye bekle
@@ -100,7 +100,7 @@ public class GameController {
         }).start();
     }
 
-    // ✅ YENİ: Online modda başlat (Client)
+    // Online modda başlat (Client)
     public void startAsClient(String serverIp) {
         System.out.println("🌐 Connecting to server: " + serverIp);
         isOnlineMode = true;
@@ -111,7 +111,7 @@ public class GameController {
             System.out.println("✅ Connected! Waiting for game to start...");
             initializeGame();
 
-            // ✅ GEÇİCİ: 3 saniye bekle sonra başlat
+            // 3 saniye bekle sonra başlat
             new Thread(() -> {
                 try {
                     Thread.sleep(3000);  // 3 saniye bekle
@@ -133,7 +133,7 @@ public class GameController {
         System.out.println("\n🎮 Initializing game...\n");
         System.out.println("Mode: " + (isOnlineMode ? "ONLINE" : "LOCAL"));
 
-        // ✅ YENİ: Seçilen temayı uygula
+        // Seçilen temayı uygula
         Theme selectedTheme = GameManager.getInstance().getSelectedTheme();
         if (selectedTheme != null) {
             ThemeManager.getInstance().setTheme(selectedTheme);
@@ -236,7 +236,7 @@ public class GameController {
     public void startGame() {
         gameView.displayWelcome();
 
-        // State: Menu -> Playing
+        // State: Menu to Playing
         stateManager.changeState(new PlayingState());
         gameModel.start();
         running = true;
@@ -275,7 +275,7 @@ public class GameController {
                 lastTime = currentTime;
             }
 
-            // CPU'yu yorma
+            // CPU'yu yormamak icin
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -289,7 +289,7 @@ public class GameController {
 
     // Input işle
     private void handleInput() {
-        // ✅ ONLINE MOD: Sadece kendi player'ını kontrol et
+        //  ONLINE modda Sadece kendi player'ını kontrol et
         if (isOnlineMode) {
             int myPlayerId = networkController.getMyPlayerId();
             Player myPlayer = (myPlayerId == 1) ? realPlayer1 : realPlayer2;
@@ -334,7 +334,7 @@ public class GameController {
             }
 
         } else {
-            // ✅ LOCAL MOD: Her iki player'ı kontrol et
+            // LOCAL modda Her iki player'ı kontrol et
             handleLocalInput();
         }
         // Pause
@@ -367,7 +367,7 @@ public class GameController {
         }
     }
 
-    // ✅ YENİ: Local input handler
+    // Local input handler
     private void handleLocalInput() {
         // Player 1 hareketi
         if (realPlayer1.isAlive()) {
@@ -435,7 +435,7 @@ public class GameController {
             }
         }
 
-        // ✅ YENİ: Düşmanları güncelle
+        // Düşmanları güncelle
         for (Enemy enemy : gameModel.getEnemies()) {
             if (enemy.isAlive()) {
                 // Strategy pattern ile hareket et
@@ -499,7 +499,7 @@ public class GameController {
 
         return closest;
     }
-    // Enemy çarpışma kontrolü
+    // Enemy collision kontrolü
     private void checkEnemyCollisions() {
         for (Enemy enemy : gameModel.getEnemies()) {
             if (!enemy.isAlive()) continue;
@@ -544,7 +544,7 @@ public class GameController {
         }
     }
 
-    // ✅ Power-up topla (DECORATOR PATTERN)
+    // Power-up topla (DECORATOR PATTERN)
     private void collectPowerUp(Player player, PowerUp powerUp) {
         String powerUpName = powerUp.getName();
         int px = player.getX();
@@ -552,7 +552,7 @@ public class GameController {
 
         System.out.println("\n🎁 " + player.getName() + " collected " + powerUpName + "!");
 
-        // ✅ DECORATOR PATTERN ile sarmal
+        // DECORATOR PATTERN ile sarmal
         if (player == realPlayer1) {
             player1 = applyDecorator(player1, powerUp);
             addNotification(getNotificationText(powerUp), px, py);
@@ -565,7 +565,7 @@ public class GameController {
         }
     }
 
-    // ✅ Decorator uygula
+    // Decorator uygula
     private IPlayer applyDecorator(IPlayer player, PowerUp powerUp) {
         if (powerUp instanceof SpeedBoostPowerUp) {
             return new SpeedBoostDecorator(player);
@@ -580,7 +580,7 @@ public class GameController {
         return player;
     }
 
-    // ✅ Notification text helper
+    // Notification text helper
     private String getNotificationText(PowerUp powerUp) {
         if (powerUp instanceof SpeedBoostPowerUp) {
             return "⚡ SPEED UP!";
@@ -626,7 +626,7 @@ public class GameController {
                 }
             }
         }
-        // ✅ YENİ: Patlama alanındaki düşmanları kontrol et
+        // Patlama alanındaki düşmanları kontrol et
         for (Enemy enemy : gameModel.getEnemies()) {
             if (!enemy.isAlive()) continue;
 
@@ -705,7 +705,7 @@ public class GameController {
 
     // Oyun bitti mi?
     private boolean checkGameOver() {
-        // ✅ realPlayer kullan (IPlayer'da isAlive() yok)
+        // realPlayer kullan (IPlayer'da isAlive() yok)
         boolean p1Alive = realPlayer1.isAlive();
         boolean p2Alive = realPlayer2.isAlive();
 
@@ -724,7 +724,7 @@ public class GameController {
     private void endGame() {
         String winner;
 
-        // ✅ realPlayer kullan
+        // realPlayer kullan
         if (realPlayer1.isAlive() && !realPlayer2.isAlive()) {
             winner = "Player 1";
         } else if (realPlayer2.isAlive() && !realPlayer1.isAlive()) {
@@ -751,7 +751,7 @@ public class GameController {
     private void cleanup() {
         System.out.println("\n🧹 Cleaning up...");
 
-        // ✅ Network bağlantısını kapat
+        // Network bağlantısını kapat
         if (isOnlineMode && networkController != null) {
             networkController.disconnect();
         }
@@ -764,10 +764,9 @@ public class GameController {
     public InputController getInputController() {
         return inputController;
     }
-    // =====================================
-    // NETWORK CALLBACK METODLARI
-    // =====================================
 
+
+    // NETWORK CALLBACK METODLARI
     // Oyun başladığında
     public void onNetworkGameStart() {
         System.out.println("🎮 Network game starting!");
@@ -836,8 +835,7 @@ public class GameController {
 
         Player player = (playerId == 1) ? realPlayer1 : realPlayer2;
         if (player != null) {
-            // Player zaten local'de de ölüyor
-            // Bu sadece senkronizasyon
+            // Player zaten local'de de ölüyo, sadece senkronizasyon
         }
     }
 
@@ -847,7 +845,7 @@ public class GameController {
         running = false;
     }
 
-    // ✅ YENİ: Power-up türüne göre decorator uygula
+    // Power-up türüne göre decorator uygula
     private IPlayer applyDecoratorByName(IPlayer player, String powerUpType) {
         switch (powerUpType) {
             case "Speed Boost":
@@ -861,12 +859,12 @@ public class GameController {
         }
     }
 
-    // ✅ YENİ: Network controller'ı dışarı ver
+    //Network controller'ı dışarı ver
     public NetworkController getNetworkController() {
         return networkController;
     }
 
-    // ✅ YENİ: Online mod kontrolü
+    //Online mod kontrolü
     public boolean isOnlineMode() {
         return isOnlineMode;
     }

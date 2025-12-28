@@ -20,10 +20,10 @@ public class PowerUpFactory {
             case BOMB_COUNT:
                 return new BombCountPowerUp(x, y);
 
-            case SHIELD:  // ✅ YENİ!
+            case SHIELD:  // YENİ powerup ekledim
                 return new ShieldPowerUp(x, y);
 
-            case GHOST:  // ✅ YENİ!
+            case GHOST:  // YENİ powerup ekledim
                 return new GhostPowerUp(x, y);
 
             default:

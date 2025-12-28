@@ -52,7 +52,7 @@ public class InputController implements KeyListener {
         // Kullanılmıyor
     }
 
-    // Tuş basılı mı?
+    // Tuş basılı mı kontrolu
     public boolean isKeyPressed(int keyCode) {
         return pressedKeys.contains(keyCode);
     }

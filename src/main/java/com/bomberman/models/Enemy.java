@@ -8,7 +8,7 @@ public class Enemy {
     private IEnemyBehavior behavior;  // Strategy Pattern!
     private boolean isAlive;
 
-    // ✅ YENİ: Hareket timer'ı
+    // Hareket timer'ı
     private float moveTimer;
     private float moveDelay; // Saniye cinsinden hareket aralığı
 
@@ -18,12 +18,12 @@ public class Enemy {
         this.behavior = behavior;
         this.isAlive = true;
 
-        // ✅ YENİ: Her enemy tipi için farklı hız
+        // Her enemy tipi için farklı hız
         this.moveTimer = 0;
         this.moveDelay = 0.5f; // Default: 0.5 saniyede bir hareket
     }
 
-    // ✅ YENİ: Hareket hızını ayarla
+    //Hareket hızını ayarla
     public void setMoveDelay(float delay) {
         this.moveDelay = delay;
     }
@@ -34,14 +34,13 @@ public class Enemy {
         System.out.println("Enemy behavior changed to: " + behavior.getBehaviorName());
     }
 
-    // ✅ GÜNCELLEME: Map ve Player parametresi ekle
     public void performMove(Map map, Player targetPlayer) {
         if (behavior != null && isAlive) {
             behavior.move(this, map, targetPlayer);
         }
     }
 
-    // ✅ GÜNCELLEME: Timer kontrolü ile hareket
+    //  Timer kontrolü ile hareket
     public void update(float deltaTime, com.bomberman.models.Map map, Player targetPlayer) {
         if (!isAlive) return;
 
@@ -57,12 +56,11 @@ public class Enemy {
         }
     }
 
-    // ✅ Eski metod da korunsun (geriye dönük uyumluluk için)
+    //
     @Deprecated
     public void performMove() {
         if (behavior != null && isAlive) {
             System.out.println("⚠️ Warning: performMove() called without Map and Player");
-            // Eski behavior metodunu çağır (uyumluluk için)
         }
     }
 
@@ -76,7 +74,6 @@ public class Enemy {
         System.out.println("💀 " + behavior.getBehaviorName() + " enemy died at (" + x + "," + y + ")");
     }
 
-    // Getters
     public int getX() {
         return x;
     }
